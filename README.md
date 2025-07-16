@@ -1,10 +1,8 @@
-# Credits
-
-This project is based on the work from [AchilleasKn/flask_api_python](https://github.com/AchilleasKn/flask_api_python).
-
 # Iris Classifier Web Application
 
 This project is a full-stack web application for classifying Iris flower species using a machine learning model. It consists of a Python Flask API backend and a Streamlit frontend, both containerized with Docker for easy deployment.
+
+This project is based on the work from [AchilleasKn/flask_api_python](https://github.com/AchilleasKn/flask_api_python).
 
 ## Features
 
