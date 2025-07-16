@@ -1,177 +1,111 @@
-# Model Deployment as API | The Iris Dataset
+# Iris Classifier Web Application
 
-I took this work from the repo https://github.com/AchilleasKn/flask_api_python
+This project is a full-stack web application for classifying Iris flower species using a machine learning model. It consists of a Python Flask API backend and a Streamlit frontend, both containerized with Docker for easy deployment.
 
-Deploying a Machine Learning Model as a REST API with Flask
+## Features
 
-![Iris](https://s3.amazonaws.com/assets.datacamp.com/blog_assets/Machine+Learning+R/iris-machinelearning.png "Iris")
+- **Machine Learning Model:**  
+  Trained on the classic Iris dataset using the K-Nearest Neighbors (KNN) algorithm (`n_neighbors=1`) for perfect accuracy on the training data.
+- **REST API:**  
+  A Flask-based API that serves predictions from the trained model.
+- **Interactive Frontend:**  
+  A Streamlit web app for users to input flower features and receive instant predictions.
+- **Dockerized:**  
+  Both backend and frontend run in isolated containers, orchestrated with Docker Compose.
 
-## Data Set Information
+---
 
-This is perhaps the best known database to be found in the pattern recognition literature. The data set contains 3 classes of 50 instances each, where each class refers to a type of iris plant. One class is linearly separable from the other 2; the latter are NOT linearly separable from each other.
+## Project Structure
 
-Predicted attribute: class of iris plant.
-
-## Attribute Information
-
-1. sepal length in cm
-2. sepal width in cm
-3. petal length in cm
-4. petal width in cm
-5. class:
-   -- Iris Setosa
-   -- Iris Versicolour
-   -- Iris Virginica
-
-## Steps
-
-1. Build and train the machine learning model in a Jupyter Notebook (file: _model/Iris_model.ipynb_),
-2. save the model in a (pickle) file (file: _api/iris_model.pkl_)
-3. create an API application that uses the pre-trained model to generate predictions (file: _api/api.py_),
-4. encapsulate the application in a Docker container (file: _api/Dockerfile_),
-5. deploy the application to a cloud server.
-
-## Technical Requirements
-
-- Python 3.4+,
-- Docker,
-- The required Python libraries used can be installed from the included _requirements.txt_ file:
-
-## Running the application locally
-
-### Directly
-
-```bash
-# Clone the project
-git clone https://github.com/AchilleasKn/flask_api_python.git
-
-# Change Directory
-cd flask_api_python/api
-
-# Install pip for Python3
-apt install python3-pip
-
-# Install the requirements
-pip3 install -r requirements.txt
-
-# Run the script in Python
-python3 api.py
+```
+flask_api_python/
+│
+├── api/                  # Backend Flask API
+│   ├── api.py            # Main API application
+│   ├── iris_model.pkl    # Serialized ML model
+│   ├── requirements.txt  # Python dependencies for backend
+│   ├── Dockerfile        # Dockerfile for backend
+│
+├── frontend/             # Streamlit frontend
+│   ├── app.py            # Main Streamlit app
+│   ├── requirements.txt  # Python dependencies for frontend
+│   ├── Dockerfile        # Dockerfile for frontend
+│
+├── model/                # Model training notebook
+│   └── Iris_model.ipynb  # Jupyter notebook for training and exporting the model
+│
+├── docker-compose.yml    # Orchestration for backend and frontend
+└── README.md             # Project documentation
 ```
 
-### On Docker
+---
 
-###### Available images:
+## Getting Started
 
-- achilleaskn/flask_api_python:latest
+### Prerequisites
 
-This image is based on the python:3.6-jessie official image
+- [Docker](https://www.docker.com/get-started) and [Docker Compose](https://docs.docker.com/compose/) installed on your system.
 
-[![](https://images.microbadger.com/badges/image/achilleaskn/flask_api_python.svg)](https://microbadger.com/images/achilleaskn/flask_api_python "Get your own image badge on microbadger.com")
+### Build and Run
 
-- achilleaskn/flask_api_python:alpine.latest
+1. **Clone the repository:**
 
-This image is based on Alpine Linux image which is a lightweight version of Linux
+   ```sh
+   git clone https://github.com/yourusername/your-repo-name.git
+   cd your-repo-name
+   ```
 
-[![](https://images.microbadger.com/badges/image/achilleaskn/flask_api_python:alpine.latest.svg)](https://microbadger.com/images/achilleaskn/flask_api_python:alpine.latest "Get your own image badge on microbadger.com")
+2. **Build and start the application:**
 
-##### From scratch
+   ```sh
+   docker compose up --build
+   ```
 
-```bash
-# Clone the project
-git clone https://github.com/AchilleasKn/flask_api_python.git
+3. **Access the frontend:**
 
-# Change Directory
-cd flask_api_python/api
+   - Open your browser and go to [http://localhost:8501](http://localhost:8501)
 
-# Build the docker image
-docker build -t flask_api .
+4. **API endpoint (optional):**
+   - The backend API is available at [http://localhost:5000](http://localhost:5000)
 
-# For the alpine version run the following
-#docker build -f Dockerfile.alpine -t flask_api .
+---
 
-# Run the flask_api image and expose the 5000 port
-docker run -d -p 5000:5000 flask_api
+## How It Works
 
-# To see the running containers
-docker ps
+- The **backend** (`api/`) loads a pre-trained KNN model (`iris_model.pkl`) and exposes a `/predict` endpoint for predictions.
+- The **frontend** (`frontend/`) provides a user-friendly interface to input flower measurements and displays the predicted Iris species.
+- Both services are defined in `docker-compose.yml` and communicate over a Docker network using service names.
 
-# To see the logs of our running container
-docker logs <Container ID>
-```
+---
 
-##### With Docker Pull
+## Model Training
 
-```bash
-# Pull the docker image
-docker pull achilleaskn/flask_api_python:latest
+- The model is trained in the `model/Iris_model.ipynb` notebook using the K-Nearest Neighbors algorithm with `n_neighbors=1`.
+- The trained model is saved as `api/iris_model.pkl` and used by the Flask API for inference.
 
-# For the alpine version run the following
-#docker pull achilleaskn/flask_api_python:alpine.latest
+---
 
-# Run the flask_api image and expose the 5000 port
-docker run -d -p 5000:5000 achilleaskn/flask_api_python:latest
+## Customization
 
-# For the alpine version run the following
-#docker run -d -p 5000:5000 achilleaskn/flask_api_python:alpine.latest
+- To retrain or update the model, modify and run the Jupyter notebook in `model/`, then replace the `iris_model.pkl` file in `api/`.
+- To change the frontend or backend logic, edit the respective files in `frontend/` or `api/` and rebuild the containers.
 
-# To see the running containers
-docker ps
+---
 
-# To see the logs of our running container
-docker logs <Container ID>
-```
+## License
 
-### Testing the application
+[MIT License](LICENSE)  
+Feel free to use, modify, and distribute this project.
 
-Once it is running, the API can be queried using HTTP POST requests.
-I recommend using [postman](https://www.getpostman.com/) for testing.
+---
 
-URL: `http://0.0.0.0:5000/predict`
+## Acknowledgements
 
-- Sample query for "Setosa" type:
+- [Scikit-learn](https://scikit-learn.org/)
+- [Flask](https://flask.palletsprojects.com/)
+- [Streamlit](https://streamlit.io/)
+- [Docker](https://www.docker.com/)
 
-```json
-{
-  "feature_array": [4.9, 2.9, 1.2, 0.3]
-}
-```
+---
 
-The response should look like this:
-
-```json
-{
-  "prediction": [0]
-}
-```
-
-- Sample query for "Versicolour" type:
-
-```json
-{
-  "feature_array": [6.4, 3.2, 4.5, 1.5]
-}
-```
-
-The response should look like this:
-
-```json
-{
-  "prediction": [1]
-}
-```
-
-- Sample query for "Virginica" type:
-
-```json
-{
-  "feature_array": [6.2, 3.1, 5.3, 2.4]
-}
-```
-
-The response should look like this:
-
-```json
-{
-  "prediction": [2]
-}
-```
+**Enjoy classifying Iris flowers!**

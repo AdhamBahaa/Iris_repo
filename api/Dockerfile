@@ -16,25 +16,45 @@
 # # run the flask API
 # CMD python3 api.py
 
-# Use an official Python runtime as a parent image
-FROM python:3.10-slim
+# # Use an official Python runtime as a parent image
+# FROM python:3.10-slim
 
-# Set the working directory in the container
+# # Set the working directory in the container
+# WORKDIR /app
+
+# # Copy requirements and install dependencies
+# COPY requirements.txt ./
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# # Copy the rest of the application code
+# COPY . .
+
+# # Expose the port Flask runs on
+# EXPOSE 5000
+
+# # Set environment variable for Flask
+# ENV FLASK_APP=api.py
+
+# # Run the application
+# # CMD ["flask", "run", "--host=0.0.0.0", "--port=5000", " & " , "streamlit run iris_frontend_streamlit.py"]
+# CMD ["/bin/sh", "-c", "flask run --host=0.0.0.0 --port=5000 & streamlit run iris_frontend_streamlit.py"]
+
+
+
+FROM python:3.10-slim 
+
+RUN pip install --upgrade pip
+
+# RUN apt-get update && apt-get install -y gcc libffi-dev libssl-dev && apt-get clean
+
+COPY . /app
 WORKDIR /app
 
-# Copy requirements and install dependencies
-COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
-# Copy the rest of the application code
-COPY . .
-
-# Expose the port Flask runs on
+# Expose Streamlit & Flask ports
+EXPOSE 8501
 EXPOSE 5000
 
-# Set environment variable for Flask
-ENV FLASK_APP=api.py
-
-# Run the application
-# CMD ["flask", "run", "--host=0.0.0.0", "--port=5000", " & " , "streamlit run iris_frontend_streamlit.py"]
-CMD ["/bin/sh", "-c", "flask run --host=0.0.0.0 --port=5000 & streamlit run iris_frontend_streamlit.py"]
+# Run Streamlit and Flask together
+CMD ["python", "api.py"]

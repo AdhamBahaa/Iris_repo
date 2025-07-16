@@ -11,11 +11,11 @@ petal_width = st.number_input("Petal Width", 0.0, 10.0, 0.2)
 if st.button("Predict"):
     features = [sepal_length, sepal_width, petal_length, petal_width]
     response = requests.post(
-        "http://host.docker.internal:5000/predict",
+        "http://backend:5000/predict",
         json={"feature_array": features}
     )
     if response.status_code == 200:
         pred = response.json()["prediction"][0]
-        st.success(f"Predicted class: {pred}")
+        st.success(f"Predicted class: **{pred}**")
     else:
         st.error("Prediction failed.")
